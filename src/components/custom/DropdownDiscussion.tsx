@@ -10,6 +10,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
+import { ReportDialog } from "./ReportDialog";
 
 interface DropdownDiscussionProps {
   user_id: string;
@@ -173,25 +174,7 @@ const DropdownDiscussion = ({ user_id, showVerifiy, commentId, setIsVerified, is
           </Button>
         )}
         {user_id !== username && (
-          <Button variant="ghost">
-            <DropdownMenuItem className="font-light text-lg">
-              <svg
-                width="23"
-                height="23"
-                viewBox="0 0 23 23"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13.0116 21.702L12.0424 22.0799C11.6928 22.211 11.3076 22.211 10.9581 22.0799L9.98878 21.702C7.53366 20.7395 5.42486 19.0606 3.93649 16.8838C2.44812 14.7069 1.64903 12.1326 1.64307 9.49558V4.92843C3.50359 5.19359 5.40118 4.95204 7.13596 4.22922C8.87072 3.50641 10.3784 2.32909 11.5002 0.821289C13.5538 3.81129 16.9545 5.22415 21.3574 4.92843V9.49558C21.3514 12.1326 20.5524 14.7069 19.0639 16.8838C17.5755 19.0606 15.4668 20.7395 13.0116 21.702Z"
-                  stroke="black"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <span className="ml-2">Laporkan</span>
-            </DropdownMenuItem>
-          </Button>
+          <ReportDialog/>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
