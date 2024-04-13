@@ -56,6 +56,7 @@ const ReportDialog =({
   const handleReportSubmit = async () => {
     try {
       const reportData = {
+        comment_id: commentId,
         report_type: selectedReportType,
         created_at: new Date().toISOString(),
         status_review: false
