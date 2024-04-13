@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ThreadCard from "@/components/custom/ThreadCard";
+import FormDialog from "@/components/custom/FormDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useDiscussion } from "@/DiscussionContext";
@@ -28,6 +29,7 @@ function MainPage() {
   const [filteredDiscussions, setFilteredDiscussions] =
     useState<ThreadProps[]>(discussions);
   const [found, setFound] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
@@ -51,11 +53,24 @@ function MainPage() {
     }
   };
 
+  const openFormDialog = () => {
+    setIsFormOpen(true);
+  }
+
+  const closeFormDialog = () => {
+    setIsFormOpen(false);
+  }
+
+  const handleSubmit = () => {
+    closeFormDialog();
+  }
+
+
   return (
     <div className="container text-left mx-auto p-4">
       {/* Button "Tambah" */}
       <div className="flex justify-between items-center mb-5">
-        <Button className="bg-[#38B0AB] hover:bg-teal-700 text-gray-100 px-4 py-2 rounded-md flex items-center">
+        <Button className="bg-[#38B0AB] hover:bg-teal-700 text-gray-100 px-4 py-2 rounded-md flex items-center" onClick={openFormDialog}>
           <FontAwesomeIcon icon={faPlus} className="mr-2 text-lg" />
           Tambah
         </Button>
@@ -74,6 +89,7 @@ function MainPage() {
           </Button>
         </div>
       </div>
+
       {(!found)
         ? discussions.map((thread : ThreadProps) => (
             <ThreadCard
@@ -101,8 +117,14 @@ function MainPage() {
               createdTime={thread.created_at}
             />
           ))}
+          
+          <FormDialog isOpen={isFormOpen} onClose={closeFormDialog} onSubmit={handleSubmit} />
+
     </div>
+    
   );
+
+  
 }
 
 export default MainPage;
