@@ -5,6 +5,7 @@ import Upvote from "./Upvote";
 import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 import { useState } from "react";
 import DropdownDiscussion from "./DropdownDiscussion";
+import ReportDialog  from "./ReportDialog";
 
 interface CommentProps {
   id: number;
@@ -69,6 +70,11 @@ const Comment = ({
             path="/comment"
             id={id}
           ></DropdownDiscussion>
+          <ReportDialog
+            isDialogOpen={false}
+            setIsDialogOpen={() => {}}
+            commentId={id}
+            ></ReportDialog>
         </div>
       </section>
 

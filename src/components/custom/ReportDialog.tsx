@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -5,8 +7,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger
+  DialogTitle
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Label } from "@/components/ui/label"
@@ -15,9 +16,104 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 interface ReportDialogProps {
   isDialogOpen: boolean;
   setIsDialogOpen: (open: boolean) => void;
+  commentId?: number;
 }
 
-export function ReportDialog({isDialogOpen, setIsDialogOpen}: ReportDialogProps) {
+interface ReportType{
+  value: string;
+  label: string;
+  description: string;
+}
+
+const ReportDialog =({
+  isDialogOpen, 
+  setIsDialogOpen, 
+  commentId }: ReportDialogProps) => {
+  const [commentData, setCommentData] = useState(null); // State untuk menyimpan data komentar
+  const [selectedReportType, setSelectedReportType] = useState('');
+
+  // Fungsi untuk mengambil data komentar dari endpoint
+  const fetchCommentData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/discussion/comment/${commentId}`
+        );
+        if (!response.ok) {
+          throw new Error('Failed to fetch comment data');
+        }
+      const data = await response.json();
+      setCommentData(data); // Set data komentar ke state
+      console.log('Fetched comment data:', data); // Mencetak data komentar ke konsol
+    } catch (error) {
+      console.error('Error fetching comment data:', error);
+    }
+  };
+
+  const handleReportTypeChange = (value: string) => {
+    setSelectedReportType(value);
+  };
+
+  const handleReportSubmit = async () => {
+    try {
+      const reportData = {
+        report_type: selectedReportType,
+        created_at: new Date().toISOString(),
+        status_review: false
+      };
+  
+      await axios.post('http://localhost:3000/discussion/report', reportData);
+      
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error('Error reporting:', error);
+    }
+  };
+
+  const reportTypes: ReportType[] = [
+    {
+      value: "spam",
+      label: "Spam",
+      description: "Akun palsu, penipuan keuangan, memposting tautan berbahaya, menyalahgunakan hastag, keterlibatan palsu, balasan berulang, posting ulang, atau direct message"
+    },
+    {
+      value: "privasi",
+      label: "Privasi",
+      description: "Membagikan informasi pribadi, mengancam akan membagikan/menyebarkan informasi pribadi, membagikan gambar intim tanpa persetujuan, membagikan gambar saya yang tidak saya kehendaki di platform ini"
+    },
+    {
+      value: "kebencian",
+      label: "Kebencian",
+      description: "Cercaan, stereotip rasis atau seksis, dehumanisasi, menyulut ketakutan atau diskriminasi, referensi kebencian, simbol & logo kebencian"
+    },
+    {
+      value: "penghinaan",
+      label: "Penghinaan & Pelecehan secara Online",
+      description: "Penghinaan, konten seksual yang tidak diinginkan & objektifikasi grafis, konten NSFW & grafis yang tidak diinginkan, penyangkalan peristiwa kekerasan, pelecehan bertarget dan memprovokasi pelecehan"
+    },
+    {
+      value: "kekerasan",
+      label: "Tutur Kekerasan",
+      description: "Ancaman kekerasan, berharap terjadinya celaka, mengagungkan kekerasan, penghasutan kekerasan, penghasutan kekerasan dengan kode"
+    },
+    {
+      value: "media-sensitif",
+      label: "Media yang sensitif atau mengganggu",
+      description: "Graphic content, gratutious gore, adult nudity & sexual behavior, violent sexual conduct, bestiality & necrophilia, media depicting a decreased individual"
+    },
+    {
+      value: "bunuh-diri",
+      label: "Bunuh diri atau melukai diri sendiri",
+      description: "Mendorong, mempromosikan, memberikan intruksi, atau membagikan metode untuk melukai diri"
+    }
+  ];
+
+  // Mengambil data komentar saat dialog dibuka
+  useEffect(() => {
+    if (isDialogOpen) {
+      fetchCommentData();
+    }
+  }, [isDialogOpen]);
+
   return (
     <Dialog open={isDialogOpen} onOpenChange={isDialogOpen && setIsDialogOpen}>
       <DialogContent className="sm:max-w-[400px]">
@@ -28,62 +124,30 @@ export function ReportDialog({isDialogOpen, setIsDialogOpen}: ReportDialogProps)
           </DialogDescription>
         </DialogHeader>
           <ScrollArea className="h-[350px] w-[350px] rounded-md border p-4 bg-slate-50">
-            <RadioGroup defaultValue="spam" >
-            <div className="flex items-center space-x-2">
-                <RadioGroupItem value="spam" id="r1" />
-                <div className="flex flex-col">
-                  <Label htmlFor="r1">Spam</Label>
-                  <p className="text-sm font-extralight">Akun palsu, penipuan keuangan, memposting tautan berbahaya, menyalahgunakan hastag, keterlibatan palsu, balasan berulang, posting ulang, atau direct message</p>
+          <RadioGroup>
+            <div className="flex flex-col space-y-4">
+              {reportTypes.map((type) => (
+                <div key={type.value} className="flex items-center space-x-2">
+                  <RadioGroupItem 
+                    value={type.value} 
+                    id={`r${type.value}`}
+                    checked={selectedReportType === type.value}
+                    onChange={() => handleReportTypeChange(type.value)}
+                  />
+                  <div className="flex flex-col">
+                    <Label htmlFor={`r${type.value}`}>{type.label}</Label>
+                    <p className="text-sm font-extralight">{type.description}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="privasi" id="r2" />
-                <div className="flex flex-col">
-                  <Label htmlFor="r2">Privasi</Label>
-                  <p className="text-sm font-extralight">Membagikan informasi pribadi, mengancam akan membagikan/menyebarkan informasi pribadi, membagikan gambar intim tanpa persetujuan, membagikan gambar saya yang tidak saya kehendaki di platform ini</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="kebencian" id="r3" />
-                <div className="flex flex-col">
-                  <Label htmlFor="r3">Kebencian</Label>
-                  <p className="text-sm font-extralight">Cercaan, stereotip rasis atau seksis, dehumanisasi, menyulut ketakutan atau diskriminasi, referensi kebencian, simbol & logo kebencian</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="penghinaan" id="r4" />
-                <div className="flex flex-col">
-                  <Label htmlFor="r4">Penghinaan & Pelecehan secara Online</Label>
-                  <p className="text-sm font-extralight">Penghinaan, konten seksual yang tidak diinginkan & objektifikasi grafis, konten NSFW & grafis yang tidak diinginkan, penyangkalan peristiwa kekerasan, pelecehan bertarget dan memprovokasi pelecehan</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="kekerasan" id="r5" />
-                <div className="flex flex-col">
-                  <Label htmlFor="r5">Tutur Kekerasan</Label>
-                  <p className="text-sm font-extralight">Ancaman kekerasan, berharap terjadinya celaka, mengagungkan kekerasan, penghasutan kekerasan, penghasutan kekerasan dengan kode</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="media-sensitif" id="r6" />
-                <div className="flex flex-col">
-                  <Label htmlFor="r6">Media yang sensitif atau mengganggu</Label>
-                  <p className="text-sm font-extralight">Graphic content, gratutious gore, adult nudity & sexual behavior, violent sexual conduct, bestiality & necrophilia, media depicting a decreased individual</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="bunuh-diri" id="r7" />
-                <div className="flex flex-col">
-                  <Label htmlFor="r7">Bunuh diri atau melukai diri sendiri</Label>
-                  <p className="text-sm font-extralight">Mendorong, mempromosikan, memberikan intruksi, atau membagikan metode untuk melukai diri</p>
-                </div>
-              </div>
-            </RadioGroup>
+              ))}
+            </div>
+          </RadioGroup>
           </ScrollArea>
         <DialogFooter>
-          <Button type="submit">Laporkan</Button>
+          <Button type="submit" onClick={handleReportSubmit} className="bg-[#38B0AB] hover:bg-teal-700">Laporkan</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
+export default ReportDialog;

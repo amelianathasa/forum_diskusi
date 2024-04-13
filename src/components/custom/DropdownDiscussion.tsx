@@ -10,7 +10,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
-import { ReportDialog } from "./ReportDialog";
+import  ReportDialog  from "./ReportDialog";
 
 interface DropdownDiscussionProps {
   user_id: string;
