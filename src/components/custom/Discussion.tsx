@@ -1,12 +1,12 @@
-import parse from "html-react-parser";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { useDiscussion } from "@/DiscussionContext";
-import { Button } from "../ui/button";
+import FormComment from "./FormComment";
 import Comment from "./Comment";
-import DropdownDiscussion from "./DropdownDiscussion";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import parse from "html-react-parser";
+import { CommentData } from "../types";
 
 interface ThreadProps {
   id: number;
@@ -15,7 +15,6 @@ interface ThreadProps {
   title: string;
   content: string;
   anonymous: boolean;
-  comment_count: number;
   created_at: string;
   comment: {
     id: number;
@@ -44,11 +43,9 @@ interface ThreadProps {
 }
 
 const Discussion = () => {
-  const { threadId } = useParams();
+  const { threadId } = useParams<{ threadId: string }>();
   const { discussions, fetchDiscussionList } = useDiscussion();
-  const [discussionData, setDiscussionData] = useState<ThreadProps>(
-    discussions[0]
-  );
+  const [discussionData, setDiscussionData] = useState<ThreadProps | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,16 +53,61 @@ const Discussion = () => {
         await fetchDiscussionList();
       }
 
-      const discussion: ThreadProps = discussions.find(
-        (d: ThreadProps) => d.id == threadId
+      const discussion: ThreadProps | undefined = discussions.find(
+        (d: ThreadProps) => d.id === Number(threadId)
       );
-      setDiscussionData(discussion);
+      if (discussion) {
+        setDiscussionData(discussion);
+      }
     };
 
     fetchData();
   }, [threadId, discussions, fetchDiscussionList]);
 
-  const timeAgo = moment(discussionData.created_at).fromNow();
+  const timeAgo = moment(discussionData?.created_at).fromNow();
+
+  const handleCommentSubmit = async (content: string, anonymous: boolean) => {
+    const newComment: CommentData = {
+      id: Math.floor(Math.random() * 1000) + 1, // Random ID (replace with actual ID logic)
+      user_id: "user1112", // Set user_id accordingly
+      author: "John Doe", // Update with author name or leave as Anonymous
+      content,
+      anonymous,
+      verified: false,
+      created_at: new Date().toISOString(),
+      comment_reply: [], // Initialize with empty array for replies
+      thread_id: Number(threadId),
+    };
+
+    try {
+      const response = await fetch(`http://localhost:3000/discussion/${threadId}/comments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newComment),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log("New comment added:", responseData);
+
+        // Update discussionData with the new comment
+        setDiscussionData((prevData) => ({
+          ...prevData!,
+          comment: [...prevData!.comment, responseData],
+        }));
+      } else {
+        console.error("Failed to add comment:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
+
+  if (!discussionData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="mb-5 text-left">
@@ -82,14 +124,7 @@ const Discussion = () => {
             </div>
           </div>
         </div>
-        <div>
-          <DropdownDiscussion
-            showVerifiy={false}
-            user_id={discussionData.user_id}
-            path=""
-            id={discussionData.id}
-          ></DropdownDiscussion>
-        </div>
+        {/* Place the DropdownDiscussion or other action components here */}
       </section>
 
       <section className="px-4 pb-4">
@@ -104,23 +139,30 @@ const Discussion = () => {
           <div className="pb-2">
             {discussionData.thread_tag.length > 0 ? (
               discussionData.thread_tag.map((tag) => (
-                  <span key={tag.tag.id} className="text-xs font-medium rounded-md p-1 px-2 mr-2 bg-[#F9A682] text-[#B23E19]">
-                    {tag.tag.name}
-                  </span>
+                <span
+                  key={tag.tag.id}
+                  className="text-xs font-medium rounded-md p-1 px-2 mr-2 bg-[#F9A682] text-[#B23E19]"
+                >
+                  {tag.tag.name}
+                </span>
               ))
             ) : (
               <p>no tags</p>
             )}
           </div>
-
-          <p className="text-right">{discussionData.comment_count} Balasan</p>
+          <p className="text-right">{discussionData.comment.length} Balasan</p>
         </div>
       </section>
       <hr style={{ border: "1px solid #85878D" }} />
 
-      {/* buat comment */}
+      {/* Form komentar di atas daftar komentar */}
       <section className="px-4 pb-4">
-        {discussionData.comment.map((comment) => (
+        <FormComment onSubmit={handleCommentSubmit} />
+      </section>
+
+      {/* Komentar dan Balasan Komentar */}
+      <section className="px-4 pb-4">
+        {discussionData.comment.map((comment: any) => (
           <Comment
             key={comment.id}
             id={comment.id}
@@ -131,7 +173,7 @@ const Discussion = () => {
             verified={comment.verified}
             created_at={comment.created_at}
             comment_reply={comment.comment_reply}
-          ></Comment>
+          />
         ))}
       </section>
     </div>

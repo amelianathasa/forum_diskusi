@@ -330,9 +330,9 @@ const FormDialog: React.FC<FormDialogProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex items-center justify-between mt-4">
                 <div className="flex items-center space-x-2">
-                  <div className="relative">
+                  <div className="relative flex items-center">
                     <Switch checked={anonymousMode} onChange={handleToggleAnonymousMode} />
-                    <Label htmlFor="anonymous-mode">Anonymous Mode</Label>
+                    <Label htmlFor="anonymous-mode" className="ml-2">Anonymous Mode</Label>
                     {dropdownOpen && (
                       <div className="absolute top-full left-0 z-10 w-10 h-6 bg-transparent" onClick={handleSwitchBlur}></div>
                     )}
