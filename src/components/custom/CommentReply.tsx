@@ -1,6 +1,8 @@
+import React from "react";
 import moment from "moment";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import DropdownDiscussion from "./DropdownDiscussion";
+import parse from "html-react-parser";
 
 interface CommentProps {
   id: number;
@@ -22,7 +24,7 @@ const CommentReply = ({
   const timeAgo = moment(created_at).fromNow();
   return (
     <>
-      <section className="py-4 flex justify-between">
+      <section className="py-4 flex justify-between ml-10">
         <div className="flex items-center">
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" />
@@ -46,7 +48,8 @@ const CommentReply = ({
       </section>
 
       <section className="ml-12 px-1 pb-4">
-        <div className="font-light">{content}</div>
+        {/* Parse HTML content */}
+        <div className="font-light">{parse(content)}</div>
       </section>
 
       <hr />
