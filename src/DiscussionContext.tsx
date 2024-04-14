@@ -19,7 +19,7 @@ interface Discussion {
   }[];
   thread_tag: {
     tag: {
-      id: string;
+      id: number;
       name: string;
     }
   }[];
@@ -35,7 +35,7 @@ const DiscussionContext = createContext<{
 } | null>(null);
 
 export function DiscussionProvider({ children }: Props) {
-  const [discussions, setDiscussions] = useState([]);
+  const [discussions, setDiscussions] = useState<Discussion[]>([]);
 
   const fetchDiscussionList = async () => {
     try {
@@ -61,4 +61,10 @@ export function DiscussionProvider({ children }: Props) {
   );
 }
 
-export const useDiscussion = () => useContext(DiscussionContext);
+export const useDiscussion = () => {
+  const context = useContext(DiscussionContext);
+  if (!context) {
+    throw new Error("useDiscussion must be used within a DiscussionProvider");
+  }
+  return context;
+};

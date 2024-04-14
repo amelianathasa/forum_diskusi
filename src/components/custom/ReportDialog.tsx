@@ -16,7 +16,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 interface ReportDialogProps {
   isDialogOpen: boolean;
   setIsDialogOpen: (open: boolean) => void;
-  commentId?: number;
 }
 
 interface ReportType{
@@ -28,9 +27,10 @@ interface ReportType{
 const ReportDialog =({
   isDialogOpen, 
   setIsDialogOpen, 
-  commentId }: ReportDialogProps) => {
+   }: ReportDialogProps,
+  ) => {
   const [commentData, setCommentData] = useState(null); // State untuk menyimpan data komentar
-  const [selectedReportType, setSelectedReportType] = useState('');
+  const [selectedReportType, setSelectedReportType] = useState("");
 
   // Fungsi untuk mengambil data komentar dari endpoint
   const fetchCommentData = async () => {
