@@ -79,7 +79,9 @@ const ReportDialog =({
       if (!response.ok) {
         throw new Error('Failed to submit report');
       }
-  
+
+      console.log('Report data successfully submitted:', reportData); 
+
       setIsDialogOpen(false);
     } catch (error) {
       console.error('Error reporting:', error);
@@ -133,7 +135,7 @@ const ReportDialog =({
   }, [isDialogOpen]);
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={isDialogOpen && setIsDialogOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
           <DialogTitle>Laporkan Masalah</DialogTitle>
