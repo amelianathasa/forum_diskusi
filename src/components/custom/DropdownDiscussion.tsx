@@ -209,7 +209,11 @@ const DropdownDiscussion = ({
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-      <ReportDialog isDialogOpen={isReportDialogOpen} setIsDialogOpen={setIsReportDialogOpen} />
+      <ReportDialog 
+      isDialogOpen={isReportDialogOpen} 
+      setIsDialogOpen={setIsReportDialogOpen} 
+      commentId={commentId}
+      />
     </>
   );
 };

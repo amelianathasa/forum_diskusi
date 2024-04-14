@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -16,6 +15,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 interface ReportDialogProps {
   isDialogOpen: boolean;
   setIsDialogOpen: (open: boolean) => void;
+  commentId: number;
 }
 
 interface ReportType{
@@ -26,13 +26,15 @@ interface ReportType{
 
 const ReportDialog =({
   isDialogOpen, 
-  setIsDialogOpen, 
+  setIsDialogOpen,
+  commentId 
    }: ReportDialogProps,
   ) => {
   const [commentData, setCommentData] = useState(null); // State untuk menyimpan data komentar
-  const [selectedReportType, setSelectedReportType] = useState("");
+  const [selectedReportType, setSelectedReportType] = useState("spam");
+  const [userId, setUserId] = useState<string>("");
+  const [threadId, setThreadId] = useState<number>(0);
 
-  // Fungsi untuk mengambil data komentar dari endpoint
   const fetchCommentData = async () => {
     try {
       const response = await fetch(
@@ -43,6 +45,8 @@ const ReportDialog =({
         }
       const data = await response.json();
       setCommentData(data); // Set data komentar ke state
+      setUserId(data.user_id); // Set user_id ke state
+      setThreadId(data.thread_id); // Set thread_id ke state
       console.log('Fetched comment data:', data); // Mencetak data komentar ke konsol
     } catch (error) {
       console.error('Error fetching comment data:', error);
@@ -56,19 +60,32 @@ const ReportDialog =({
   const handleReportSubmit = async () => {
     try {
       const reportData = {
+        user_id: userId,
+        thread_id: threadId,
         comment_id: commentId,
         report_type: selectedReportType,
         created_at: new Date().toISOString(),
         status_review: false
       };
   
-      await axios.post('http://localhost:3000/discussion/report', reportData);
-      
+      const response = await fetch('http://localhost:3000/discussion/report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reportData)
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to submit report');
+      }
+  
       setIsDialogOpen(false);
     } catch (error) {
       console.error('Error reporting:', error);
     }
   };
+  
 
   const reportTypes: ReportType[] = [
     {
