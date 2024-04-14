@@ -212,7 +212,8 @@ const DropdownDiscussion = ({
       <ReportDialog 
       isDialogOpen={isReportDialogOpen} 
       setIsDialogOpen={setIsReportDialogOpen} 
-      commentId={commentId}
+      id={id}
+      path={path}
       />
     </>
   );

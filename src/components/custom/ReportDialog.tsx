@@ -26,7 +26,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 interface ReportDialogProps {
   isDialogOpen: boolean;
   setIsDialogOpen: (open: boolean) => void;
-  commentId: number;
+  id: number;
+  path: string;
 }
 
 interface ReportType{
@@ -79,11 +80,16 @@ const formSchema = z.object({
 });
 
 function ReportDialog({
-  isDialogOpen, setIsDialogOpen, commentId
+  isDialogOpen, 
+  setIsDialogOpen, 
+  id,
+  path
 }: ReportDialogProps) {
-  const [commentData, setCommentData] = useState<any>(null);
-  const [userId, setUserId] = useState<string>("");
-  const [threadId, setThreadId] = useState<number>(0);
+  // const [commentData, setCommentData] = useState<any>(null);
+  const [userId, setUserId] = useState<string>('null');
+  const [threadId, setThreadId] = useState<number>(0); 
+  const [commentId, setCommentId] = useState<number>(0); 
+  const [commentReplyId, setCommentReplyId] =  useState<number>(0); 
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -92,19 +98,30 @@ function ReportDialog({
     },
   });
 
-  const fetchCommentData = async () => {
+  const fetchData = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/discussion/comment/${commentId}`
+        `http://localhost:3000/discussion${path}/${id}`
       );
       if (!response.ok) {
         throw new Error('Failed to fetch comment data');
       }
       const data = await response.json();
-      setCommentData(data); // Set data komentar ke state
-      setUserId(data.user_id); // Set user_id ke state
-      setThreadId(data.thread_id); // Set thread_id ke state
-      console.log('Fetched comment data:', data); // Mencetak data komentar ke konsol
+
+      if (path === "") {
+        setThreadId(data.id);
+        setUserId(data.user_id);
+      } else if (path === "/comment") {
+        setCommentId(data.id);
+        setThreadId(data.thread_id);
+        setUserId(data.user_id);  
+      } else if (path === "/comment-reply") {
+        setCommentReplyId(data.id);
+        setCommentId(data.comment_id);
+        setUserId(data.user_id); 
+      }
+      
+      console.log('Fetched comment data:', data); 
     } catch (error) {
       console.error('Error fetching comment data:', error);
     }
@@ -113,10 +130,12 @@ function ReportDialog({
 
   const handleReportSubmit = async () => {
     try {
+      
       const reportData = {
-        user_id: userId,
-        thread_id: threadId,
-        comment_id: commentId,
+        user_id: userId, 
+        thread_id: threadId, 
+        comment_id: commentId, 
+        comment_reply_id: commentReplyId,
         report_type: formSchema.parse({ type: form.watch('type') }).type,
         created_at: new Date().toISOString(),
         status_review: false
@@ -145,7 +164,7 @@ function ReportDialog({
   // Mengambil data komentar saat dialog dibuka
   useEffect(() => {
     if (isDialogOpen) {
-      fetchCommentData();
+      fetchData();
     }
   }, [isDialogOpen]);
 
@@ -199,3 +218,4 @@ function ReportDialog({
   );
 }
 export default ReportDialog;
+
