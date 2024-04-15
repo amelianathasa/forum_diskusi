@@ -87,9 +87,9 @@ function ReportDialog({
 }: ReportDialogProps) {
   // const [commentData, setCommentData] = useState<any>(null);
   const [userId, setUserId] = useState<string>('null');
-  const [threadId, setThreadId] = useState<number>(0); 
-  const [commentId, setCommentId] = useState<number>(0); 
-  const [commentReplyId, setCommentReplyId] =  useState<number>(0); 
+  const [threadId, setThreadId] = useState<number>(null); 
+  const [commentId, setCommentId] = useState<number>(null); 
+  const [commentReplyId, setCommentReplyId] =  useState<number>(null); 
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -148,6 +148,7 @@ function ReportDialog({
         },
         body: JSON.stringify(reportData)
       });
+      console.log('Report data:', reportData);
 
       if (!response.ok) {
         throw new Error('Failed to submit report');

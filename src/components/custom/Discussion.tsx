@@ -125,13 +125,14 @@ const Discussion = () => {
             </div>
           </div>
         </div>
-        {/* Place the DropdownDiscussion or other action components here */}
-        <DropdownDiscussion
+        <div>
+          <DropdownDiscussion
             showVerifiy={false}
             user_id={discussionData.user_id}
             path=""
             id={discussionData.id}
           ></DropdownDiscussion>
+        </div>
       </section>
 
       <section className="px-4 pb-4">

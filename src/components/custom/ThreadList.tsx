@@ -6,6 +6,8 @@ import FormDialog from "@/components/custom/FormDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useDiscussion } from "@/DiscussionContext";
+import ReportList from "./ReportList";
+import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 
 interface ThreadProps {
   id: string;
@@ -30,6 +32,8 @@ function MainPage() {
     useState<ThreadProps[]>(discussions);
   const [found, setFound] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const isAdmin = getAuthenticatedUser().administrator;
 
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
@@ -65,6 +69,10 @@ function MainPage() {
     closeFormDialog();
   }
 
+  const openReportList=  () => {
+    
+  }
+
 
   return (
     <div className="container text-left mx-auto p-4">
@@ -87,6 +95,7 @@ function MainPage() {
           >
             Cari
           </Button>
+          
         </div>
       </div>
 
@@ -119,7 +128,15 @@ function MainPage() {
           ))}
           
           <FormDialog isOpen={isFormOpen} onClose={closeFormDialog} onSubmit={handleSubmit} />
-
+          {isAdmin && (
+            <ReportList/>
+          //   <Button
+          //   className="bg-[#38B0AB] hover:bg-teal-700"
+          //   onClick={openReportList}
+          // >
+          //   Daftar Report
+          // </Button>
+          )}
     </div>
     
   );
