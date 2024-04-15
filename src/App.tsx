@@ -3,6 +3,7 @@ import "./App.css";
 import Discussion from "./components/custom/Discussion";
 import ThreadList from "./components/custom/ThreadList";
 import { DiscussionProvider } from "./DiscussionContext";
+import ReportList from "./components/custom/ReportList";
 
 const Layout = () => {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<Layout/>}>
             <Route index element={<ThreadList />} />
             <Route path="/discussion/:threadId" element={<Discussion />} />
+            <Route path="/report" element={<ReportList/>} />
           </Route>
         </Routes>
       </DiscussionProvider>

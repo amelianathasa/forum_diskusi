@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
 import ThreadCard from "@/components/custom/ThreadCard";
 import FormDialog from "@/components/custom/FormDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useDiscussion } from "@/DiscussionContext";
-import ReportList from "./ReportList";
 import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 
 interface ThreadProps {
@@ -69,11 +69,6 @@ function MainPage() {
     closeFormDialog();
   }
 
-  const openReportList=  () => {
-    
-  }
-
-
   return (
     <div className="container text-left mx-auto p-4">
       {/* Button "Tambah" */}
@@ -95,6 +90,15 @@ function MainPage() {
           >
             Cari
           </Button>
+          {isAdmin && (
+            <div className="ml-3">
+              <Link to="/report">
+                <Button className="bg-[#38B0AB] hover:bg-teal-700">
+                  Daftar Report
+                </Button>
+              </Link>
+            </div>
+          )}
           
         </div>
       </div>
@@ -128,7 +132,7 @@ function MainPage() {
           ))}
           
           <FormDialog isOpen={isFormOpen} onClose={closeFormDialog} onSubmit={handleSubmit} />
-          {isAdmin && (
+          {/* {isAdmin && (
             <ReportList/>
           //   <Button
           //   className="bg-[#38B0AB] hover:bg-teal-700"
@@ -136,7 +140,7 @@ function MainPage() {
           // >
           //   Daftar Report
           // </Button>
-          )}
+          )} */}
     </div>
     
   );
