@@ -1,12 +1,15 @@
+import { useDiscussion } from "@/DiscussionContext";
 import React, { useEffect, useState } from "react";
 
 interface UpvoteProps {
   commentId: number;
   user_id: string;
+  upvote: number;
 }
 
-const Upvote = ({ commentId, user_id }: UpvoteProps) => {
+const Upvote = ({ commentId, user_id, upvote}: UpvoteProps) => {
   const [upvoted, setUpvoted] = useState(false);
+  const { discussions, fetchDiscussionList } = useDiscussion();
   const [upvoteCount, setUpvoteCount] = useState(0);
   const handleUpvote = async () => {
     vote();
@@ -24,6 +27,8 @@ const Upvote = ({ commentId, user_id }: UpvoteProps) => {
       }
     );
     const data = await response.json();
+    // TODO: change implementation to update the upvote count
+    fetchDiscussionList();
     setUpvoted(data.voted);
   };
 
@@ -64,7 +69,7 @@ const Upvote = ({ commentId, user_id }: UpvoteProps) => {
             strokeLinejoin="round"
           />
         </svg>
-        <p className="ml-2 font-medium">{upvoted ? "Up Voted" : "Up Vote"}</p>
+        <p className="ml-2 font-medium">{upvote}{upvoted ? " Up Voted" : " Up Vote"}</p>
       </div>
     </button>
   );

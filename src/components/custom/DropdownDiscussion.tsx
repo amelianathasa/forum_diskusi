@@ -10,6 +10,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
+import { useDiscussion } from "@/DiscussionContext";
 import  ReportDialog  from "./ReportDialog";
 
 interface DropdownDiscussionProps {
@@ -35,6 +36,7 @@ const DropdownDiscussion = ({
   const username = getAuthenticatedUser().username;
 
   const [isReportDialogOpen, setIsReportDialogOpen] = React.useState(false);
+  const { discussions, fetchDiscussionList } = useDiscussion();
 
   const handleVerify = async () => {
     try {
@@ -78,6 +80,7 @@ const DropdownDiscussion = ({
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+      fetchDiscussionList();
       const data = await response.json();
       console.log(data);
     } catch (error) {

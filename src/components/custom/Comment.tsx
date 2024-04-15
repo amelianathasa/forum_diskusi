@@ -19,6 +19,7 @@ interface CommentProps {
   content: string;
   anonymous: boolean;
   verified: boolean;
+  upvote: number;
   created_at: string;
 }
 
@@ -29,6 +30,7 @@ const Comment = ({
   content,
   anonymous,
   verified,
+  upvote,
   created_at,
 }: CommentProps) => {
   const [isVerified, setIsVerified] = useState(verified);
@@ -173,7 +175,7 @@ const Comment = ({
           </button>
         </div>
 
-        <Upvote commentId={id} user_id={getAuthenticatedUser().username} />
+        <Upvote commentId={id} user_id={getAuthenticatedUser().username} upvote={upvote}/>
       </section>
 
       {showReply && (

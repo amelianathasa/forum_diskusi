@@ -24,6 +24,7 @@ interface ThreadProps {
     content: string;
     anonymous: boolean;
     verified: boolean;
+    upvote: number;
     created_at: string;
     comment_reply: {
       id: number;
@@ -179,6 +180,7 @@ const Discussion = () => {
             content={comment.content}
             anonymous={comment.anonymous}
             verified={comment.verified}
+            upvote={comment.upvote}
             created_at={comment.created_at}
             comment_reply={comment.comment_reply}
           />
