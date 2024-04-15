@@ -7,6 +7,7 @@ import Comment from "./Comment";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import parse from "html-react-parser";
 import { CommentData } from "../types";
+import DropdownDiscussion from "./DropdownDiscussion";
 
 interface ThreadProps {
   id: number;
@@ -124,7 +125,14 @@ const Discussion = () => {
             </div>
           </div>
         </div>
-        {/* Place the DropdownDiscussion or other action components here */}
+        <div>
+          <DropdownDiscussion
+            showVerifiy={false}
+            user_id={discussionData.user_id}
+            path=""
+            id={discussionData.id}
+          ></DropdownDiscussion>
+        </div>
       </section>
 
       <section className="px-4 pb-4">
