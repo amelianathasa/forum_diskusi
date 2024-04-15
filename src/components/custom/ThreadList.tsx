@@ -92,7 +92,7 @@ function MainPage() {
           </Button>
           {isAdmin && (
             <div className="ml-3">
-              <Link to="/report">
+              <Link to="/report-list">
                 <Button className="bg-[#38B0AB] hover:bg-teal-700">
                   Daftar Report
                 </Button>

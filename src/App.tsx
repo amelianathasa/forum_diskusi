@@ -23,7 +23,7 @@ function App() {
           <Route path="/" element={<Layout/>}>
             <Route index element={<ThreadList />} />
             <Route path="/discussion/:threadId" element={<Discussion />} />
-            <Route path="/report" element={<ReportList/>} />
+            <Route path="/report-list" element={<ReportList/>} />
           </Route>
         </Routes>
       </DiscussionProvider>
