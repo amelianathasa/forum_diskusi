@@ -9,6 +9,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
+import parse from "html-react-parser";
+
 // Interface untuk props laporan
 interface ReportProps {
   id: string;
@@ -65,7 +67,7 @@ function ReportList() {
       {reports.map((report) => (
             <TableRow key={report.id}>
               <TableCell>{report.author}</TableCell>
-              <TableCell>{report.content}</TableCell>
+              <TableCell>{parse(report.content)}</TableCell>
               <TableCell>{report.reportType}</TableCell>
               <TableCell>
                 <Button className="bg-red-500 hover:bg-red-700">Delete</Button>

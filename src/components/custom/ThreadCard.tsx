@@ -1,18 +1,14 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComment, faPlus } from "@fortawesome/free-solid-svg-icons";
 import parse from "html-react-parser";
 import moment from "moment";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { Button } from "../ui/button";
 
 interface ThreadCardProps {
   threadId: string;
