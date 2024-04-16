@@ -22,6 +22,8 @@ import {
 } from "@/components/ui/form"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
+
 
 interface ReportDialogProps {
   isDialogOpen: boolean;
