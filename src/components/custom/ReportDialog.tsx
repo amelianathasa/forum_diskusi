@@ -121,7 +121,6 @@ function ReportDialog({
         setUserId(data.user_id); 
       }
       
-      console.log('Fetched comment data:', data); 
     } catch (error) {
       console.error('Error fetching comment data:', error);
     }
@@ -148,13 +147,10 @@ function ReportDialog({
         },
         body: JSON.stringify(reportData)
       });
-      console.log('Report data:', reportData);
 
       if (!response.ok) {
         throw new Error('Failed to submit report');
       }
-
-      console.log('Report data successfully submitted:', reportData);
 
       setIsDialogOpen(false);
     } catch (error) {

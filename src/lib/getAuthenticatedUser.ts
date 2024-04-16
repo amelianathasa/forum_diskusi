@@ -11,7 +11,7 @@ export function getAuthenticatedUser() {
   const userAccountData: UserAccount = {
     email: "admin@gmail.com",
     userId: 4,
-    username: "sendis",
+    username: "user123",
     roles: [],
     administrator: true,
     name: "",

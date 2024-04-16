@@ -39,7 +39,7 @@ const CommentReply = ({
         </div>
         <div>
           <DropdownDiscussion
-            showVerifiy={false}
+            showVerify={false}
             user_id={user_id}
             path="/comment-reply"
             id={id}

@@ -11,11 +11,11 @@ import {
 import { Button } from "../ui/button";
 import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 import { useDiscussion } from "@/DiscussionContext";
-import  ReportDialog  from "./ReportDialog";
+import ReportDialog from "./ReportDialog";
 
 interface DropdownDiscussionProps {
   user_id: string;
-  showVerifiy: boolean;
+  showVerify: boolean;
   commentId?: number;
   setIsVerified?: (verified: boolean) => void;
   isVerified?: boolean;
@@ -25,7 +25,7 @@ interface DropdownDiscussionProps {
 
 const DropdownDiscussion = ({
   user_id,
-  showVerifiy,
+  showVerify,
   commentId,
   setIsVerified,
   isVerified,
@@ -108,7 +108,7 @@ const DropdownDiscussion = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end">
-          {isAdmin && showVerifiy && (
+          {isAdmin && showVerify && (
             <Button variant="ghost" onClick={handleVerify}>
               <DropdownMenuItem className="font-light text-lg">
                 <svg
@@ -122,14 +122,14 @@ const DropdownDiscussion = ({
                     <path
                       d="M12.0811 21.9875C11.7036 22.1331 11.2854 22.1331 10.9079 21.9875C7.96254 20.8566 5.42945 18.859 3.64329 16.2582C1.85711 13.6575 0.901901 10.5762 0.903811 7.42116V2.53315C0.903811 2.10103 1.07547 1.68658 1.38103 1.38103C1.6866 1.07547 2.10103 0.903809 2.53315 0.903809H20.4559C20.8879 0.903809 21.3024 1.07547 21.608 1.38103C21.9136 1.68658 22.0852 2.10103 22.0852 2.53315V7.42116C22.0871 10.5762 21.1319 13.6575 19.3458 16.2582C17.5595 18.859 15.0265 20.8566 12.0811 21.9875Z"
                       stroke="black"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                     <path
                       d="M16.4289 6.57178L9.85749 13.9646L6.57178 11.5003"
                       stroke="black"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                   </g>
                   <defs>
@@ -157,32 +157,32 @@ const DropdownDiscussion = ({
                   <path
                     d="M1.64307 5.75H21.3574"
                     stroke="black"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M4.10742 5.75H18.8931V20.5357C18.8931 20.9714 18.72 21.3893 18.4119 21.6974C18.1039 22.0054 17.686 22.1786 17.2503 22.1786H5.75028C5.31456 22.1786 4.8967 22.0054 4.5886 21.6974C4.28051 21.3893 4.10742 20.9714 4.10742 20.5357V5.75Z"
                     stroke="black"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M7.39307 5.74986V4.92843C7.39307 3.83915 7.82578 2.79448 8.59602 2.02424C9.36625 1.254 10.4109 0.821289 11.5002 0.821289C12.5895 0.821289 13.6342 1.254 14.4044 2.02424C15.1746 2.79448 15.6074 3.83915 15.6074 4.92843V5.74986"
                     stroke="black"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M9.03613 10.6807V17.2546"
                     stroke="black"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M13.9644 10.6807V17.2546"
                     stroke="black"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
                 <span className="ml-2">Hapus</span>
@@ -202,8 +202,8 @@ const DropdownDiscussion = ({
                   <path
                     d="M13.0116 21.702L12.0424 22.0799C11.6928 22.211 11.3076 22.211 10.9581 22.0799L9.98878 21.702C7.53366 20.7395 5.42486 19.0606 3.93649 16.8838C2.44812 14.7069 1.64903 12.1326 1.64307 9.49558V4.92843C3.50359 5.19359 5.40118 4.95204 7.13596 4.22922C8.87072 3.50641 10.3784 2.32909 11.5002 0.821289C13.5538 3.81129 16.9545 5.22415 21.3574 4.92843V9.49558C21.3514 12.1326 20.5524 14.7069 19.0639 16.8838C17.5755 19.0606 15.4668 20.7395 13.0116 21.702Z"
                     stroke="black"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
                 <span className="ml-2">Laporkan</span>
@@ -212,11 +212,11 @@ const DropdownDiscussion = ({
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-      <ReportDialog 
-      isDialogOpen={isReportDialogOpen} 
-      setIsDialogOpen={setIsReportDialogOpen} 
-      id={id}
-      path={path}
+      <ReportDialog
+        isDialogOpen={isReportDialogOpen}
+        setIsDialogOpen={setIsReportDialogOpen}
+        id={id}
+        path={path}
       />
     </>
   );

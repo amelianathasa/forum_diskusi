@@ -128,7 +128,7 @@ const Discussion = () => {
         </div>
         <div>
           <DropdownDiscussion
-            showVerifiy={false}
+            showVerify={false}
             user_id={discussionData.user_id}
             path=""
             id={discussionData.id}

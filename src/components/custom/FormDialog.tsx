@@ -190,7 +190,6 @@ const FormDialog: React.FC<FormDialogProps> = ({ isOpen, onClose }) => {
   
       const data = await response.json();
   
-      console.log("Thread created:", data);
   
       onClose(); // Tutup dialog setelah berhasil membuat thread
     } catch (error) {
