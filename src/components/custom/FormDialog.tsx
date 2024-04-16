@@ -13,7 +13,7 @@ interface FormDialogProps {
 
 interface Tag {
   id: number;
-  name: string;
+  nama_tag: string;
 }
 
 const Switch: React.FC<{ checked: boolean; onChange: (checked: boolean) => void }> = ({ checked, onChange }) => {
@@ -283,7 +283,7 @@ const FormDialog: React.FC<FormDialogProps> = ({ isOpen, onClose }) => {
                             key={tag.id}
                             className="flex items-center bg-gray-200 rounded-md p-2"
                           >
-                            <span>{tag.name}</span>
+                            <span>{tag.nama_tag}</span>
                             <button
                               className="ml-1 outline-none focus:ring-2 focus:ring-offset-2"
                               onClick={() => handleUnselect(tag)}
@@ -315,7 +315,7 @@ const FormDialog: React.FC<FormDialogProps> = ({ isOpen, onClose }) => {
                               onClick={() => handleSelectTag(tag)}
                               className="cursor-pointer hover:bg-gray-100 rounded-md px-2 py-1"
                             >
-                              {tag.name}
+                              {tag.nama_tag}
                             </div>
                           ))}
                         </div>
