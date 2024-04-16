@@ -113,11 +113,9 @@ function ReportDialog({
         setUserId(data.user_id);
       } else if (path === "/comment") {
         setCommentId(data.id);
-        setThreadId(data.thread_id);
         setUserId(data.user_id);  
       } else if (path === "/comment-reply") {
         setCommentReplyId(data.id);
-        setCommentId(data.comment_id);
         setUserId(data.user_id); 
       }
       
