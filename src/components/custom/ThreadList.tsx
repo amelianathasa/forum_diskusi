@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
 import ThreadCard from "@/components/custom/ThreadCard";
 import FormDialog from "@/components/custom/FormDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useDiscussion } from "@/DiscussionContext";
+import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 
 interface ThreadProps {
   id: string;
@@ -30,6 +32,8 @@ function MainPage() {
     useState<ThreadProps[]>(discussions);
   const [found, setFound] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const isAdmin = getAuthenticatedUser().administrator;
 
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
@@ -65,7 +69,6 @@ function MainPage() {
     closeFormDialog();
   }
 
-
   return (
     <div className="container text-left mx-auto p-4">
       {/* Button "Tambah" */}
@@ -87,6 +90,16 @@ function MainPage() {
           >
             Cari
           </Button>
+          {isAdmin && (
+            <div className="ml-3">
+              <Link to="/report-list">
+                <Button className="bg-[#38B0AB] hover:bg-teal-700">
+                  Daftar Report
+                </Button>
+              </Link>
+            </div>
+          )}
+          
         </div>
       </div>
 
@@ -119,7 +132,15 @@ function MainPage() {
           ))}
           
           <FormDialog isOpen={isFormOpen} onClose={closeFormDialog} onSubmit={handleSubmit} />
-
+          {/* {isAdmin && (
+            <ReportList/>
+          //   <Button
+          //   className="bg-[#38B0AB] hover:bg-teal-700"
+          //   onClick={openReportList}
+          // >
+          //   Daftar Report
+          // </Button>
+          )} */}
     </div>
     
   );
