@@ -14,12 +14,12 @@ import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 // Interface untuk props laporan
 interface ReportProps {
   id: number;
-  threadId : number;
-  commentId: number;
-  commentReplyId: number;
+  thread_id : number;
+  comment_id: number;
+  comment_reply_id: number;
+  report_type: string;
   author: string;
   content: string;
-  reportType: string;
 }
 
 function ReportList() {
@@ -37,8 +37,17 @@ function ReportList() {
         throw new Error('Failed to fetch report data');
       }
       const data = await response.json();
-
-      setReports(data);
+       const adjustedData = data.map((report: any) => ({
+        ...report,
+        id: report.id,
+        thread_id: report.thread_id,
+        comment_id: report.comment_id,
+        comment_reply_id: report.comment_reply_id,
+        report_type: report.report_type,
+        content: report.content,
+        author: report.author,
+      }));
+      setReports(adjustedData);
       console.log('Report data fetched:', data);
     } catch (error) {
       console.error('Error fetching report data:', error);
@@ -60,8 +69,6 @@ function ReportList() {
      path="";
      id = threadId 
     }
-    console.log("path:", path);
-    console.log("id:", id);
   
       const response = await fetch(
         `http://localhost:3000/discussion${path}/${id}`,
@@ -71,7 +78,7 @@ function ReportList() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userId: getAuthenticatedUser().username,
+            idAdmin: getAuthenticatedUser().administrator,
           }),
         }
       );
@@ -107,9 +114,9 @@ function ReportList() {
             <TableRow key={report.id}>
               <TableCell>{report.author}</TableCell>
               <TableCell>{report.content}</TableCell>
-              <TableCell>{report.reportType}</TableCell>
+              <TableCell>{report.report_type}</TableCell>
               <TableCell>
-              <Button className="bg-red-500 hover:bg-red-700" onClick={() => handleDelete(parseInt(report.threadId), parseInt(report.commentId), parseInt(report.commentReplyId))}>Delete</Button>
+              <Button className="bg-red-500 hover:bg-red-700" onClick={() => handleDelete(report.thread_id, report.comment_id, report.comment_reply_id)}>Delete</Button>
               </TableCell>
           </TableRow>
         ))}
