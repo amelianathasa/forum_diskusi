@@ -56,7 +56,7 @@ function ReportList() {
       <TableHeader>
         <TableRow>
           <TableHead>Author</TableHead>
-          <TableHead>Content</TableHead>
+          <TableHead>Content Reported</TableHead>
           <TableHead>Report Type</TableHead>
           <TableHead>Delete</TableHead>
         </TableRow>
