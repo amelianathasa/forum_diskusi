@@ -9,17 +9,23 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
+import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
+
 // Interface untuk props laporan
 interface ReportProps {
-  id: string;
+  id: number;
+  thread_id : number;
+  comment_id: number;
+  comment_reply_id: number;
+  report_type: string;
   author: string;
   content: string;
-  reportType: string;
 }
 
 function ReportList() {
   // State untuk menyimpan daftar laporan
   const [reports, setReports] = useState<ReportProps[]>([]);
+
 
   // Fungsi untuk mengambil data laporan dari server
   const fetchData = async () => {
@@ -31,16 +37,58 @@ function ReportList() {
         throw new Error('Failed to fetch report data');
       }
       const data = await response.json();
-
-      const adjustedData = data.map((report: any) => ({
+       const adjustedData = data.map((report: any) => ({
         ...report,
-        author: report.author,
+        id: report.id,
+        thread_id: report.thread_id,
+        comment_id: report.comment_id,
+        comment_reply_id: report.comment_reply_id,
+        report_type: report.report_type,
         content: report.content,
-        reportType: report.report_type,
+        author: report.author,
       }));
       setReports(adjustedData);
+      console.log('Report data fetched:', data);
     } catch (error) {
       console.error('Error fetching report data:', error);
+    }
+  };
+
+  const handleDelete = async (threadId: number, commentId: number, commentReplyId: number) => {
+    try {
+      let path = "";
+      let id = null;
+
+    if (commentReplyId !== null) {
+      path = "/comment-reply";
+      id = commentReplyId;
+    } else if (commentId !== null) {
+      path = "/comment";
+      id = commentId;
+    } else if (threadId !== null) {
+     path="";
+     id = threadId 
+    }
+  
+      const response = await fetch(
+        `http://localhost:3000/discussion${path}/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            idAdmin: getAuthenticatedUser().administrator,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      console.log("Report successfully deleted:", data);
+    } catch (error) {
+      console.error("Error deleting comment:", error);
     }
   };
 
@@ -66,10 +114,10 @@ function ReportList() {
             <TableRow key={report.id}>
               <TableCell>{report.author}</TableCell>
               <TableCell>{report.content}</TableCell>
-              <TableCell>{report.reportType}</TableCell>
+              <TableCell>{report.report_type}</TableCell>
               <TableCell>
-                <Button className="bg-red-500 hover:bg-red-700">Delete</Button>
-                </TableCell>
+              <Button className="bg-red-500 hover:bg-red-700" onClick={() => handleDelete(report.thread_id, report.comment_id, report.comment_reply_id)}>Delete</Button>
+              </TableCell>
           </TableRow>
         ))}
       </TableBody>
