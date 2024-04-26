@@ -78,7 +78,8 @@ function ReportList() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            idAdmin: getAuthenticatedUser().administrator,
+            userId: getAuthenticatedUser().userId,
+            isAdmin: getAuthenticatedUser().administrator,
           }),
         }
       );
