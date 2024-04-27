@@ -5,6 +5,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { X } from "react-feather";
+import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
+import { useDiscussion } from "@/DiscussionContext";
+import { create } from "domain";
 
 interface FormDialogProps {
   isOpen: boolean;
@@ -42,17 +45,19 @@ const FormDialog: React.FC<FormDialogProps> = ({ isOpen, onClose }) => {
   const [inputValue, setInputValue] = useState("");
   const [anonymousMode, setAnonymousMode] = useState(false);
   const [contentLength, setContentLength] = useState(0);
+  const { authenticatedUser } = getAuthenticatedUser();
   const [formData, setFormData] = useState({
     title: "",
     content: "",
     tags: [] as number[], // Array to store tag IDs
-    user_id: "user1011",
-    author: "Adilla",
+    user_id: authenticatedUser.username,
+    author: authenticatedUser.name ? authenticatedUser.name : authenticatedUser.username,
   });
   const quillRef = useRef<ReactQuill>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isSwitchOpen, setIsSwitchOpen] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
+  const { createThread } = useDiscussion();
 
   useEffect(() => {
     fetchTags();
@@ -169,27 +174,7 @@ const FormDialog: React.FC<FormDialogProps> = ({ isOpen, onClose }) => {
       }
   
       // Create the new thread with tagIds
-      const response = await fetch("http://localhost:3000/discussion/thread", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: formData.title,
-          content: formData.content,
-          anonymous: anonymousMode,
-          tags: formData.tags, // Mengirim ID tag ke backend
-          user_id: formData.user_id,
-          author: formData.author,
-        }),
-      });
-  
-      if (!response.ok) {
-        throw new Error("Failed to create thread");
-      }
-  
-      const data = await response.json();
-  
+      createThread(formData, anonymousMode);
   
       onClose(); // Tutup dialog setelah berhasil membuat thread
     } catch (error) {

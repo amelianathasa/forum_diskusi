@@ -19,8 +19,8 @@ interface ThreadProps {
   created_at: string;
   thread_tag: {
     tag: {
-      id: string;
-      name: string;
+      id: number;
+      nama_tag: string;
     }
   }[];
 }
@@ -33,7 +33,8 @@ function MainPage() {
   const [found, setFound] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const isAdmin = getAuthenticatedUser().administrator;
+  const { authenticatedUser } = getAuthenticatedUser();
+  const isAdmin = authenticatedUser.administrator;
 
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
@@ -104,7 +105,7 @@ function MainPage() {
       </div>
 
       {(!found)
-        ? discussions.map((thread : ThreadProps) => (
+        ? discussions.map((thread) => (
             <ThreadCard
               key={thread.id}
               threadId={thread.id}

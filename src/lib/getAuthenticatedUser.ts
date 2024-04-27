@@ -8,14 +8,14 @@ interface UserAccount {
 }
 
 export function getAuthenticatedUser() {
-  const userAccountData: UserAccount = {
+  const authenticatedUser: UserAccount = {
     email: "admin@gmail.com",
     userId: 4,
-    username: "user123",
+    username: "sendist",
     roles: [],
     administrator: true,
     name: "",
   };
 
-  return userAccountData;
+  return {authenticatedUser};
 }

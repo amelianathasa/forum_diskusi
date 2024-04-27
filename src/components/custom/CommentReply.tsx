@@ -1,4 +1,3 @@
-import React from "react";
 import moment from "moment";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import DropdownDiscussion from "./DropdownDiscussion";

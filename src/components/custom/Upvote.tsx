@@ -10,7 +10,7 @@ interface UpvoteProps {
 const Upvote = ({ commentId, user_id, upvote}: UpvoteProps) => {
   const [upvoted, setUpvoted] = useState(false);
   const { discussions, fetchDiscussionList } = useDiscussion();
-  const [upvoteCount, setUpvoteCount] = useState(0);
+  const [upvoteCount, setUpvoteCount] = useState(upvote);
   const handleUpvote = async () => {
     vote();
   };
@@ -28,8 +28,12 @@ const Upvote = ({ commentId, user_id, upvote}: UpvoteProps) => {
     );
     const data = await response.json();
     // TODO: change implementation to update the upvote count
-    fetchDiscussionList();
     setUpvoted(data.voted);
+    if (data.voted) {
+      setUpvoteCount(upvoteCount + 1);
+    } else {
+      setUpvoteCount(upvoteCount - 1);
+    }
   };
 
   useEffect(() => {
@@ -69,7 +73,7 @@ const Upvote = ({ commentId, user_id, upvote}: UpvoteProps) => {
             strokeLinejoin="round"
           />
         </svg>
-        <p className="ml-2 font-medium">{upvote}{upvoted ? " Up Voted" : " Up Vote"}</p>
+        <p className="ml-2 font-medium">{upvoteCount}{upvoted ? " Up Voted" : " Up Vote"}</p>
       </div>
     </button>
   );
