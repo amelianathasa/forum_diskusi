@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import moment from "moment";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import DropdownDiscussion from "./DropdownDiscussion";
@@ -6,8 +6,7 @@ import { Button } from "@/components/ui/button";
 import Upvote from "./Upvote";
 import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 import parse from "html-react-parser";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import RichTextEditor from "./RichTextEditor";
 import CommentReply from "./CommentReply";
 import Switch from "./Switch"; 
 import { Label } from "../ui/label";
@@ -57,7 +56,7 @@ const Comment = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user_id: "user910", // Ganti dengan user_id yang sesuai
+          user_id: "user910", 
           author: getAuthenticatedUser().username,
           content: replyContent, // Mengambil dari replyContent di state
           anonymous: anonymousMode, // Menggunakan nilai anonymousMode
@@ -191,39 +190,16 @@ const Comment = ({
               </div>
             </div>
           </div>
-          <ReactQuill
-            theme="snow"
-            value={replyContent}
-            onChange={setReplyContent}
-            placeholder="Balas komentar ini..."
-            modules={{
-              toolbar: [
-                [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                ["bold", "italic", "underline", "strike", "blockquote"],
-                [{ list: "ordered" }, { list: "bullet" }],
-                [{ color: [] }, { background: [] }],
-                ["link", "image"],
-                ["code-block"],
-                ["clean"],
-              ],
-            }}
-            formats={[
-              "header",
-              "bold",
-              "italic",
-              "underline",
-              "strike",
-              "blockquote",
-              "list",
-              "bullet",
-              "indent",
-              "link",
-              "image",
-              "color",
-              "background",
-              "code-block",
-            ]}
-          />
+          <div>
+            {/* Menggunakan RichTextEditor */}
+            <RichTextEditor
+              value={replyContent}
+              onChange={setReplyContent}
+              placeholder="Add your comment..."
+              descriptionText="Add your comment here. Max. 500 Characters"
+              containerWidth="100vw" // Set containerWidth based on dialogWidth
+            />
+          </div>
           <div className="flex justify-between mt-4">
           <div className="flex items-center space-x-2">
             <div className="relative flex items-center ">

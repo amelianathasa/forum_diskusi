@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useDiscussion } from "@/DiscussionContext";
 import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
+import { useToast } from "@/components/ui/use-toast";
 
 interface ThreadProps {
   id: string;
@@ -32,6 +33,7 @@ function MainPage() {
     useState<ThreadProps[]>(discussions);
   const [found, setFound] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const { toast } = useToast();
 
   const isAdmin = getAuthenticatedUser().administrator;
 
@@ -67,7 +69,12 @@ function MainPage() {
 
   const handleSubmit = () => {
     closeFormDialog();
+    toast({
+      description: "Your message has been sent.", // Success message
+    });
   }
+
+  
 
   return (
     <div className="container text-left mx-auto p-4">
