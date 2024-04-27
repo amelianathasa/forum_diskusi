@@ -8,8 +8,9 @@ import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 import parse from "html-react-parser";
 import RichTextEditor from "./RichTextEditor";
 import CommentReply from "./CommentReply";
-import Switch from "./Switch"; 
+import Switch from "./Switch";
 import { Label } from "../ui/label";
+import { useDiscussion } from "@/DiscussionContext";
 
 interface CommentProps {
   id: number;
@@ -20,6 +21,7 @@ interface CommentProps {
   verified: boolean;
   upvote: number;
   created_at: string;
+  comment_reply: any[];
 }
 
 const Comment = ({
@@ -31,13 +33,15 @@ const Comment = ({
   verified,
   upvote,
   created_at,
+  comment_reply,
 }: CommentProps) => {
   const [isVerified, setIsVerified] = useState(verified);
   const [showReply, setShowReply] = useState(false);
   const [replyContent, setReplyContent] = useState("");
-  const [commentReplies, setCommentReplies] = useState<CommentProps[]>([]);
-  const [anonymousMode, setAnonymousMode] = useState(false); // State for Anonymous Mode
+  const [anonymousMode, setAnonymousMode] = useState(false);
   const timeAgo = moment(created_at).fromNow();
+  const { authenticatedUser } = getAuthenticatedUser();
+  const { createCommentReply } = useDiscussion();
 
   const handleReply = () => {
     setShowReply(true);
@@ -137,8 +141,6 @@ const Comment = ({
       </section>
 
       <section className="ml-12 flex space-x-6 mb-4">
-      
-
         <div className="flex place-items-center">
           <button
             onClick={handleReply}
@@ -174,7 +176,11 @@ const Comment = ({
           </button>
         </div>
 
-        <Upvote commentId={id} user_id={getAuthenticatedUser().username} upvote={upvote}/>
+        <Upvote
+          commentId={id}
+          user_id={authenticatedUser.username}
+          upvote={upvote}
+        />
       </section>
 
       {showReply && (
@@ -186,7 +192,7 @@ const Comment = ({
             </Avatar>
             <div className="ml-3">
               <div className="text-base font-semibold text-black">
-                {getAuthenticatedUser().username}
+                {authenticatedUser.username}
               </div>
             </div>
           </div>
@@ -201,27 +207,36 @@ const Comment = ({
             />
           </div>
           <div className="flex justify-between mt-4">
-          <div className="flex items-center space-x-2">
-            <div className="relative flex items-center ">
-              <Switch checked={anonymousMode} onChange={setAnonymousMode} /> {/* Switch for Anonymous Mode */}
-              <Label htmlFor="anonymous-mode" className="ml-2 cursor-pointer">Anonymous Mode</Label>
+            <div className="flex items-center space-x-2">
+              <div className="relative flex items-center ">
+                <Switch checked={anonymousMode} onChange={setAnonymousMode} />{" "}
+                {/* Switch for Anonymous Mode */}
+                <Label htmlFor="anonymous-mode" className="ml-2 cursor-pointer">
+                  Anonymous Mode
+                </Label>
+              </div>
             </div>
-          </div>
-          <div className="flex">
-          <Button
-            onClick={handleReplySubmit}
-            className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-md">
-            Balas
-          </Button>
-            <Button onClick={handleCancelReply} variant="secondary" className="ml-2">Batal</Button>
-            
+            <div className="flex">
+              <Button
+                onClick={handleReplySubmit}
+                className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-md"
+              >
+                Balas
+              </Button>
+              <Button
+                onClick={handleCancelReply}
+                variant="secondary"
+                className="ml-2"
+              >
+                Batal
+              </Button>
             </div>
           </div>
         </section>
       )}
 
       {/* Render Comment Replies */}
-      {commentReplies.map((reply) => (
+      {comment_reply && comment_reply.map((reply) => (
         <CommentReply
           key={reply.id}
           id={reply.id}

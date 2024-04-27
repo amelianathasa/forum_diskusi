@@ -4,6 +4,7 @@ import { Label } from "../ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Switch from "./Switch";
 import RichTextEditor from "./RichTextEditor";
+import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 
 interface FormCommentProps {
   onSubmit: (content: string, anonymous: boolean) => void;
@@ -13,6 +14,8 @@ interface FormCommentProps {
 const FormComment: React.FC<FormCommentProps> = ({ onSubmit }) => {
   const [content, setContent] = useState("");
   const [anonymousMode, setAnonymousMode] = useState(false);
+  const [contentLength, setContentLength] = useState(0);
+  const { authenticatedUser } = getAuthenticatedUser();
 
   const handleContentChange = (value: string) => {
     setContent(value);
@@ -36,7 +39,7 @@ const FormComment: React.FC<FormCommentProps> = ({ onSubmit }) => {
           </Avatar>
           <div className="ml-3">
             <div className="text-base font-semibold text-black">
-              John Doe
+              { authenticatedUser.name ? authenticatedUser.name : authenticatedUser.username }
             </div>
           </div>
         </div>

@@ -23,6 +23,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
+
 interface ReportDialogProps {
   isDialogOpen: boolean;
   setIsDialogOpen: (open: boolean) => void;
@@ -90,6 +91,7 @@ function ReportDialog({
   const [threadId, setThreadId] = useState<number>(null); 
   const [commentId, setCommentId] = useState<number>(null); 
   const [commentReplyId, setCommentReplyId] =  useState<number>(null); 
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -113,11 +115,9 @@ function ReportDialog({
         setUserId(data.user_id);
       } else if (path === "/comment") {
         setCommentId(data.id);
-        setThreadId(data.thread_id);
         setUserId(data.user_id);  
       } else if (path === "/comment-reply") {
         setCommentReplyId(data.id);
-        setCommentId(data.comment_id);
         setUserId(data.user_id); 
       }
       
@@ -149,12 +149,14 @@ function ReportDialog({
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit report');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to report'); // Use a fallback message if the error data doesn't contain an error field
       }
 
       setIsDialogOpen(false);
     } catch (error) {
       console.error('Error reporting:', error);
+      setErrorMessage(error.message);
     }
   };
 
@@ -204,6 +206,9 @@ function ReportDialog({
                       <FormMessage />
                     </FormItem>
                   )} />
+                  <FormMessage className="fixed bottom-7 left-[25px]">
+                    {errorMessage}
+                  </FormMessage>
                   <Button type="submit" className="bg-[#38B0AB] hover:bg-teal-700 fixed bottom-4 right-[25px]">Laporkan</Button>
             </form>
           </Form>
