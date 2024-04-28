@@ -110,8 +110,8 @@ function ReportList() {
               <TableCell>{parse(report.content)}</TableCell>
               <TableCell>{report.report_type}</TableCell>
               <TableCell>
-                <Button className="bg-red-500 hover:bg-red-700">Delete</Button>
-                </TableCell>
+              <Button className="bg-red-500 hover:bg-red-700" onClick={() => handleDelete(report.thread_id, report.comment_id, report.comment_reply_id)}>Delete</Button>
+              </TableCell>
           </TableRow>
         ))}
       </TableBody>

@@ -80,7 +80,7 @@ const Discussion = () => {
                   key={tag.tag.id}
                   className="text-xs font-medium rounded-md p-1 px-2 mr-2 bg-[#F9A682] text-[#B23E19]"
                 >
-                  {tag.tag.name}
+                  {tag.tag.nama_tag}
                 </span>
               ))
             ) : (

@@ -1,17 +1,14 @@
 import React from "react";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 import { useDiscussion } from "@/DiscussionContext";
 import ReportDialog from "./ReportDialog";
+import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 
 interface DropdownDiscussionProps {
   user_id: string;
@@ -32,11 +29,10 @@ const DropdownDiscussion = ({
   path,
   id,
 }: DropdownDiscussionProps) => {
-  const isAdmin = getAuthenticatedUser().administrator;
-  const username = getAuthenticatedUser().username;
+  const { authenticatedUser } = getAuthenticatedUser();
 
   const [isReportDialogOpen, setIsReportDialogOpen] = React.useState(false);
-  const { discussions, fetchDiscussionList } = useDiscussion();
+  const { fetchDiscussionList, deleteComment, deleteCommentReply, deleteThread} = useDiscussion();
 
   const handleVerify = async () => {
     try {
@@ -48,7 +44,7 @@ const DropdownDiscussion = ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            isAdmin: getAuthenticatedUser().administrator,
+            isAdmin: authenticatedUser.administrator,
           }),
         }
       );
@@ -63,28 +59,28 @@ const DropdownDiscussion = ({
     }
   };
 
+  const handleDeleteComment = async () => {
+    deleteComment(id);
+  }
+
+  const handleDeleteCommentReply = async () => {
+    deleteCommentReply(id);
+  }
+
+  const handleDeleteThread = async () => {
+    deleteThread(id);
+  }
+
   const handleDelete = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/discussion${path}/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: getAuthenticatedUser().username,
-          }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      fetchDiscussionList();
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error("Error deleting comment:", error);
+    if (path === "/comment") {
+      handleDeleteComment();
+      return;
+    } else if (path === "/comment-reply") {
+      handleDeleteCommentReply();
+      return;
+    } else if (path === "") {
+      handleDeleteThread();
+      return;
     }
   };
 
@@ -108,7 +104,7 @@ const DropdownDiscussion = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end">
-          {isAdmin && showVerify && (
+          {authenticatedUser.administrator && showVerify && (
             <Button variant="ghost" onClick={handleVerify}>
               <DropdownMenuItem className="font-light text-lg">
                 <svg
@@ -144,7 +140,7 @@ const DropdownDiscussion = ({
               </DropdownMenuItem>
             </Button>
           )}
-          {user_id === username && (
+          {user_id === authenticatedUser.username && (
             <Button variant="ghost" onClick={handleDelete}>
               <DropdownMenuItem className="font-light text-lg">
                 <svg
@@ -189,7 +185,7 @@ const DropdownDiscussion = ({
               </DropdownMenuItem>
             </Button>
           )}
-          {user_id !== username && (
+          {user_id !== authenticatedUser.username && (
             <DropdownMenuItem onClick={() => setIsReportDialogOpen(true)}>
               <Button variant="ghost" className="flex font-light text-lg">
                 <svg

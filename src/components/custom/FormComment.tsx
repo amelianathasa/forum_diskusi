@@ -1,23 +1,24 @@
 import React, { useState } from "react";
 import { Button } from "../ui/button";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import { Label } from "../ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Switch from "./Switch";
+import RichTextEditor from "./RichTextEditor";
+import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 
 interface FormCommentProps {
   onSubmit: (content: string, anonymous: boolean) => void;
+  descriptionText?: string;
 }
 
 const FormComment: React.FC<FormCommentProps> = ({ onSubmit }) => {
   const [content, setContent] = useState("");
   const [anonymousMode, setAnonymousMode] = useState(false);
   const [contentLength, setContentLength] = useState(0);
+  const { authenticatedUser } = getAuthenticatedUser();
 
   const handleContentChange = (value: string) => {
     setContent(value);
-    setContentLength(value.replace(/(<([^>]+)>)/gi, "").length);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -38,49 +39,20 @@ const FormComment: React.FC<FormCommentProps> = ({ onSubmit }) => {
           </Avatar>
           <div className="ml-3">
             <div className="text-base font-semibold text-black">
-              John Doe
+              { authenticatedUser.name ? authenticatedUser.name : authenticatedUser.username }
             </div>
           </div>
         </div>
 
         {/* React Quill Editor */}
         <div>
-          <ReactQuill
+          <RichTextEditor
             value={content}
             onChange={handleContentChange}
-            placeholder="Add your comment..."
-            theme="snow"
-            modules={{
-              toolbar: [
-                [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                ["bold", "italic", "underline", "strike", "blockquote"],
-                [{ list: "ordered" }, { list: "bullet" }],
-                [{ color: [] }, { background: [] }],
-                ["link", "image"],
-                ["code-block"],
-                ["clean"],
-              ],
-            }}
-            formats={[
-              "header",
-              "bold",
-              "italic",
-              "underline",
-              "strike",
-              "blockquote",
-              "list",
-              "bullet",
-              "indent",
-              "link",
-              "image",
-              "color",
-              "background",
-              "code-block",
-            ]}
+            placeholder="Add a comment.."
+            descriptionText="Add your comment here. Max. 500 Characters"
+            containerWidth="100vw"
           />
-          <label htmlFor="content" className="block text-sm text-gray-400 mt-1 ml-1" style={{ fontSize: "12px" }}>
-            Add your comment here. Max. 500 Characters ({contentLength} / 500)
-          </label>
         </div>
 
         {/* Switch for Anonymous Mode */}

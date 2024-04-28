@@ -65,7 +65,7 @@ const ThreadCard = ({
         <CardFooter className="pb-4">
           <div className="flex-row justify-between">
             <div className="pb-2">
-              {thread_tag.length > 0 ? ( 
+              {thread_tag.length ? ( 
                 thread_tag.map((tag) => (
                   <span key={tag.tag.id} className="text-xs font-medium rounded-md p-1 px-2 mr-2 bg-[#F9A682] text-[#B23E19]">
                     {tag.tag.nama_tag}
